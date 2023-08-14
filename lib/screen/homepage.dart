@@ -34,205 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _refreshData(); // Loading the data when the app starts
   }
 
-  void dialogSheet(int? id) async {
-    if (id != null) {
-      final existingData = myData.firstWhere((element) => element['id'] == id);
-      _titleController.text = existingData['title'];
-      _descriptionController.text = existingData['description'];
-    } else {
-      _titleController.text = "";
-      _descriptionController.text = "";
-    }
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(15),
-            ),
-          ),
-          child: SingleChildScrollView(
-            child: Stack(
-              alignment: Alignment.topRight,
-              children: [
-                Container(
-                  height: 380,
-                  width: 328,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14),
-                    color: AppColors.white,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(14),
-                    child: Column(
-                      children: [
-                        Form(
-                          key: _formKey,
-                          child: Column(
-                            children: [
-                              const Text(
-                                "Add Notes",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.black,
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: TextFormField(
-                                  controller: _titleController,
-                                  decoration: InputDecoration(
-                                    hintText: 'Title',
-                                    // hintStyle: dialog1,
-                                    border: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: AppColors.deepGreen,
-                                      ),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: AppColors.deepGreen,
-                                      ),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                        color: AppColors.deepGreen,
-                                      ),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide:
-                                          const BorderSide(color: Colors.red),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: TextFormField(
-                                  maxLines: 8,
-                                  controller: _descriptionController,
-                                  decoration: InputDecoration(
-                                    hintText: 'Description',
-                                    // hintStyle: dialog1,
-                                    border: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: AppColors.deepGreen),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: AppColors.deepGreen),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: AppColors.deepGreen),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderSide:
-                                          const BorderSide(color: Colors.red),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'message_cannot_empty';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                height: 42,
-                                width: 107,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: AppColors.appBarColor,
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    'Cancel',
-                                    style: TextStyle(
-                                      color: AppColors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            GestureDetector(
-                              onTap: () async {
-                                if (_formKey.currentState!.validate()) {
-                                  if (id == null) {
-                                    await addItem();
-                                  }
-                                  if (id != null) {
-                                    await updateItem(id);
-                                  }
-
-                                  // Clear the text fields
-                                  setState(() {
-                                    _titleController.text = '';
-                                    _descriptionController.text = '';
-                                  });
-                                  Navigator.pop(context);
-                                }
-                              },
-                              child: Container(
-                                height: 42,
-                                width: 107,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: AppColors.appBarColor,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    id == null ? 'save' : 'Update',
-                                    style: const TextStyle(
-                                      color: AppColors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   String? formValidator(String? value) {
     if (value!.isEmpty) return 'Field is Required';
     return null;
@@ -379,6 +180,204 @@ class _HomeScreenState extends State<HomeScreen> {
         child: const Icon(Icons.add),
         onPressed: () => dialogSheet(null),
       ),
+    );
+  }
+
+  void dialogSheet(int? id) async {
+    if (id != null) {
+      final existingData = myData.firstWhere((element) => element['id'] == id);
+      _titleController.text = existingData['title'];
+      _descriptionController.text = existingData['description'];
+    } else {
+      _titleController.text = "";
+      _descriptionController.text = "";
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(15.r),
+            ),
+          ),
+          child: SingleChildScrollView(
+            child: Stack(
+              alignment: Alignment.topRight,
+              children: [
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14.r),
+                    color: AppColors.white,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(14.r),
+                    child: Column(
+                      children: [
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              Text(
+                                "Add Notes",
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.black,
+                                ),
+                              ),
+                              SizedBox(height: 10.h),
+                              Padding(
+                                padding: EdgeInsets.only(left: 10.w),
+                                child: TextFormField(
+                                  controller: _titleController,
+                                  decoration: InputDecoration(
+                                    hintText: 'Title',
+                                    // hintStyle: dialog1,
+                                    border: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                        color: AppColors.deepGreen,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                        color: AppColors.deepGreen,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                        color: AppColors.deepGreen,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderSide:
+                                          const BorderSide(color: Colors.red),
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10.h),
+                              Padding(
+                                padding: EdgeInsets.only(left: 10.w),
+                                child: TextFormField(
+                                  maxLines: 8,
+                                  controller: _descriptionController,
+                                  decoration: InputDecoration(
+                                    hintText: 'Description',
+                                    // hintStyle: dialog1,
+                                    border: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          color: AppColors.deepGreen),
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          color: AppColors.deepGreen),
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          color: AppColors.deepGreen),
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderSide:
+                                          const BorderSide(color: Colors.red),
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'message_cannot_empty';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 20.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                height: 42.h,
+                                width: 107.w,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.r),
+                                  color: AppColors.appBarColor,
+                                ),
+                                child: const Center(
+                                  child: Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                      color: AppColors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            GestureDetector(
+                              onTap: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  if (id == null) {
+                                    await addItem();
+                                  }
+                                  if (id != null) {
+                                    await updateItem(id);
+                                  }
+
+                                  // Clear the text fields
+                                  setState(() {
+                                    _titleController.text = '';
+                                    _descriptionController.text = '';
+                                  });
+                                  Navigator.pop(context);
+                                }
+                              },
+                              child: Container(
+                                height: 42.h,
+                                width: 107.w,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.r),
+                                  color: AppColors.appBarColor,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    id == null ? 'save' : 'Update',
+                                    style: const TextStyle(
+                                      color: AppColors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
