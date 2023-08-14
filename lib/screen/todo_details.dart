@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'config/colors.dart';
+import '../config/colors.dart';
 
 class TodeViewer extends StatefulWidget {
   const TodeViewer({Key? key}) : super(key: key);

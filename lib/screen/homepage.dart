@@ -1,23 +1,23 @@
-// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sqlite_data/config/colors.dart';
-import 'package:sqlite_data/database_helper.dart';
-import 'package:sqlite_data/todo_details.dart';
+import 'package:sqlite_data/database/database_helper.dart';
+import 'package:sqlite_data/screen/todo_details.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
-  // All data
-  List<Map<String, dynamic>> myData = [];
+class _HomeScreenState extends State<HomeScreen> {
   final _formKey = GlobalKey<FormState>();
-
   bool _isLoading = true;
+  List<Map<String, dynamic>> myData = [];
+
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   // This function is used to fetch all data from the database
   void _refreshData() async {
@@ -34,11 +34,6 @@ class _HomePageState extends State<HomePage> {
     _refreshData(); // Loading the data when the app starts
   }
 
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-
-  // This function will be triggered when the floating button is pressed
-  // It will also be triggered when you want to update an item
   void dialogSheet(int? id) async {
     if (id != null) {
       final existingData = myData.firstWhere((element) => element['id'] == id);
@@ -277,9 +272,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.black,
+      backgroundColor: AppColors.gray,
       appBar: AppBar(
         backgroundColor: AppColors.appBarColor,
+        elevation: 0,
         title: const Text('ToDo Notes'),
         actions: [
           IconButton(
@@ -295,22 +291,27 @@ class _HomePageState extends State<HomePage> {
               child: CircularProgressIndicator(),
             )
           : myData.isEmpty
-              ? const Center(child: Text("Data is No't Available"))
+              ? const Center(
+                  child: Text("Data is Not Available"),
+                )
               : GridView.builder(
                   itemCount: myData.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                   ),
-                  itemBuilder: (BuildContext context, int index) {
+                  itemBuilder: (context, index) {
                     return Padding(
-                      padding:
-                          const EdgeInsets.only(left: 11, right: 11, top: 14),
+                      padding: EdgeInsets.only(
+                        left: 11.w,
+                        right: 11.w,
+                        top: 14.h,
+                      ),
                       child: Container(
-                        height: 180,
-                        width: 200,
+                        height: 180.h,
+                        width: 200.w,
                         decoration: BoxDecoration(
                           color: Colors.white24,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: GestureDetector(
                           onTap: () {
@@ -325,10 +326,10 @@ class _HomePageState extends State<HomePage> {
                             deleteDialog();
                           },
                           child: Padding(
-                            padding: const EdgeInsets.only(
-                              top: 20,
-                              left: 8,
-                              right: 4,
+                            padding: EdgeInsets.only(
+                              top: 20.h,
+                              left: 8.w,
+                              right: 4.w,
                             ),
                             child: Column(
                               children: [
@@ -339,7 +340,7 @@ class _HomePageState extends State<HomePage> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10.h),
                                 Text(
                                   myData[index]['description'],
                                   maxLines: 4,
@@ -349,8 +350,6 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               ],
-                              // title: Text(myData[index]['title']),
-                              // subtitle: Text(myData[index]['description']),
                               // trailing: SizedBox(
                               //   width: 100,
                               // child: Row(
@@ -377,9 +376,7 @@ class _HomePageState extends State<HomePage> {
                 ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.appBarColor,
-        child: const Icon(
-          Icons.add,
-        ),
+        child: const Icon(Icons.add),
         onPressed: () => dialogSheet(null),
       ),
     );
@@ -390,34 +387,34 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) {
         return Dialog(
-          shape: const RoundedRectangleBorder(
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
-              Radius.circular(10),
+              Radius.circular(10.r),
             ),
           ),
           child: Container(
-            height: 100,
-            width: 210,
+            height: 100.h,
+            width: 210.w,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.r),
               color: AppColors.white,
             ),
             child: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 5),
+              padding: EdgeInsets.only(left: 20.w, right: 5.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 10),
-                  const Text(
+                  SizedBox(height: 10.h),
+                  Text(
                     "আপনি কি নোটটি ডিলিট করতে চাচ্ছেন",
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 15.sp,
                       fontWeight: FontWeight.bold,
                       color: AppColors.black,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -426,10 +423,10 @@ class _HomePageState extends State<HomePage> {
                           Navigator.pop(context);
                         },
                         child: Container(
-                          height: 32,
-                          width: 70,
+                          height: 32.h,
+                          width: 70.w,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
+                            borderRadius: BorderRadius.circular(5.r),
                             // color: AppColors.appBarColor,
                           ),
                           child: const Center(
@@ -448,10 +445,10 @@ class _HomePageState extends State<HomePage> {
                           Navigator.pop(context);
                         },
                         child: Container(
-                          height: 32,
-                          width: 70,
+                          height: 32.h,
+                          width: 70.w,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
+                            borderRadius: BorderRadius.circular(5.r),
                             // color: AppColors.appBarColor,
                           ),
                           child: const Center(
